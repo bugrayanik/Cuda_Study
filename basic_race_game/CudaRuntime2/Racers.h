@@ -2,11 +2,16 @@
 #include "Racer.h"
 #include<vector>
 #include<iterator>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
 
 class Racers
 {
 private:
-	std::vector <Racer> Tabela;
+	vector <Racer> Tabela;
+	
 
 public:
 	Racers() {};
@@ -19,15 +24,36 @@ public:
 
 	void display_tabela() const {
 		for (auto i : Tabela) {
-			std::cout << "RacerNO:" << i.racerNo << " Speed(m/s):" << i.currSpeed << " Position(meters):" << i.currPos << std::endl;
+			cout << "RacerNO:" << i.racerNo << " Speed(m/s):" << i.currSpeed << " Position(meters):" << i.currPos << endl;
 		}
 	}
 
 	void modify_variable_of(int* newPos, int* newSpeed) {
-		for (auto& racer : Tabela) // access by reference to avoid copying
+		for (int i = 0; i < 100;i++) // access by reference to avoid copying
 		{
-			racer.currPos = newPos[i];
-			racer.currSpeed = newSpeed[i];
+			Tabela[i].currPos = newPos[i];
+			Tabela[i].currSpeed = newSpeed[i];
 		}
 	}
+
+
+	bool check_winner() {
+		vector <int> Winners;
+		vector <int> WinnersIndex;
+		bool a = false;
+
+		for (int i = 0; i < 100; i++)
+		{
+			if (Tabela[i].currPos >= 100) {
+				a = true;
+				Winners.push_back(Tabela[i].currPos);
+				WinnersIndex.push_back(i);
+			}
+		}
+		int maxElementIndex = max_element(Winners.begin(), Winners.end()) - Winners.begin();
+
+		cout << "GAME IS FINISHED!" << endl << "WINNER IS " << WinnersIndex[maxElementIndex];
+	
+		return a;
+	}	
 };

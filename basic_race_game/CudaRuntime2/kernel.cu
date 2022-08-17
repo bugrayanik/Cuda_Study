@@ -66,7 +66,7 @@ __host__ void Game::setValues( int size)
 __device__ void Game::dosomething(int idx, int* newspeed)
 
 {
-    int toAdd = data[idx] + newspeed[idx];
+    int toAdd = newspeed[idx];
     atomicAdd(&data[idx], toAdd);
     
 }
@@ -131,6 +131,7 @@ int main(int argc, char** argv){
         curandState* devStates;
         cudaMalloc(&devStates, N * sizeof(curandState));
         // setup seeds
+        cudaDeviceSynchronize();
         setup_kernel << < 1, tpb >> > (devStates, time(NULL));
         int* d_result, * h_result;
         cudaMalloc(&d_result, N * sizeof(int));
@@ -146,28 +147,30 @@ int main(int argc, char** argv){
         cudaMemcpy(d_min, h_min, sizeof(int), cudaMemcpyHostToDevice);
         // generate random numbers
         generate << < 1, tpb >> > (devStates, d_result, d_max, d_min, N);
+        cudaDeviceSynchronize();
 
         cudaMemcpy(h_result, d_result, N * sizeof(float), cudaMemcpyDeviceToHost);
-        
+      
 
 
         globalInstance.prepareDeviceObj();
         myKernel <<<1, 100 >>> (globalInstance, d_result);
+        cudaDeviceSynchronize();
         globalInstance.retrieveDataToHost();
         
         int* position = globalInstance.export_data();
         Real_Tabela.modify_variable_of(position,h_result);
         Real_Tabela.display_tabela();
-        
-        this_thread::sleep_for(chrono::milliseconds(1000));
+
+        Real_Tabela.check_winner();
+
+        if (Real_Tabela.check_winner() == true)
+            break;
+
+        this_thread::sleep_for(chrono::milliseconds(500));
+        cudaDeviceReset();
     };
 
-    
-
     globalInstance.free_data();
-    cudaDeviceSynchronize();
-    cudaDeviceReset();
-    exit(EXIT_SUCCESS);
-
     return 0;
 }

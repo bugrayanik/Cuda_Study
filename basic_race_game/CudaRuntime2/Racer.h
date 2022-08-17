@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-class Racer
+class Racer 
 {
 private:
 	friend class Racers;

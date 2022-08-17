@@ -55,8 +55,8 @@
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
-      <AdditionalOptions>-lcurand %(AdditionalOptions)</AdditionalOptions>
-      <CodeGeneration>compute_20.sm_21</CodeGeneration>
+      <CodeGeneration>compute_20,sm_21</CodeGeneration>
+      <AdditionalOptions>-lcurand</AdditionalOptions>
     </CudaCompile>
     <CudaLink />
   </ItemDefinitionGroup>
@@ -80,7 +80,10 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="kernel.cu">
+      <CodeGeneration Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </CodeGeneration>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Racer.h" />
