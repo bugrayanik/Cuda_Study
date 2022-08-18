@@ -130,9 +130,9 @@ int main(int argc, char** argv){
         
         curandState* devStates;
         cudaMalloc(&devStates, N * sizeof(curandState));
-        // setup seeds
-        cudaDeviceSynchronize();
+        // setup seeds 
         setup_kernel << < 1, tpb >> > (devStates, time(NULL));
+        cudaDeviceSynchronize();
         int* d_result, * h_result;
         cudaMalloc(&d_result, N * sizeof(int));
         h_result = (int*)malloc(N * sizeof(int));
@@ -150,9 +150,6 @@ int main(int argc, char** argv){
         cudaDeviceSynchronize();
 
         cudaMemcpy(h_result, d_result, N * sizeof(float), cudaMemcpyDeviceToHost);
-      
-
-
         globalInstance.prepareDeviceObj();
         myKernel <<<1, 100 >>> (globalInstance, d_result);
         cudaDeviceSynchronize();
@@ -162,15 +159,15 @@ int main(int argc, char** argv){
         Real_Tabela.modify_variable_of(position,h_result);
         Real_Tabela.display_tabela();
 
-        Real_Tabela.check_winner();
-
         if (Real_Tabela.check_winner() == true)
             break;
 
         this_thread::sleep_for(chrono::milliseconds(500));
         cudaDeviceReset();
     };
-
     globalInstance.free_data();
+
+    Real_Tabela.display_winner();
+
     return 0;
 }

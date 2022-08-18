@@ -38,22 +38,34 @@ public:
 
 
 	bool check_winner() {
-		vector <int> Winners;
-		vector <int> WinnersIndex;
-		bool a = false;
 
 		for (int i = 0; i < 100; i++)
 		{
-			if (Tabela[i].currPos >= 100) {
-				a = true;
-				Winners.push_back(Tabela[i].currPos);
-				WinnersIndex.push_back(i);
+			if (Tabela[i].currPos >= 100) 
+			{
+				cout << "GAME IS OVER!" << endl;
+				return 1;
 			}
 		}
-		int maxElementIndex = max_element(Winners.begin(), Winners.end()) - Winners.begin();
+	return 0;
+	}
 
-		cout << "GAME IS FINISHED!" << endl << "WINNER IS " << WinnersIndex[maxElementIndex];
-	
-		return a;
-	}	
+	void display_winner() {
+
+
+		vector <int> Winners;
+
+		for (int i = 0; i < 100; i++)
+		{
+			if (Tabela[i].currPos >= 100)
+			{
+				Winners.push_back(i);
+			}
+		}
+
+		cout << "Winners List:" << endl;
+
+		for (int i : Winners)
+			cout << "RacerNo" << i+1 << "LastSpeed:" << Tabela[i].currSpeed << endl;
+	}
 };
