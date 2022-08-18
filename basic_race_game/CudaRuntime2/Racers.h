@@ -66,6 +66,6 @@ public:
 		cout << "Winners List:" << endl;
 
 		for (int i : Winners)
-			cout << "RacerNo" << i+1 << "LastSpeed:" << Tabela[i].currSpeed << endl;
+			cout << "RacerNo" << i+1 << "(LastSpeed:" << Tabela[i].currSpeed << ")" << endl;
 	}
 };
